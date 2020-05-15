@@ -1,0 +1,102 @@
+span {
+    font-size: 12px;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.hero {
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, .8)), url(../images/5.png);
+    background-position: center;
+    position: absolute;
+}
+
+.form-box {
+    width: 350px;
+    height: 350px;
+    margin: 6% auto;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 15px;
+    padding: 5px;
+    position: relative;
+}
+
+h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+}
+
+.button-box {
+    width: 110px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15px;
+    box-shadow: 0 0 20px 10px #ff1268;
+    border-radius: 30px;
+}
+
+.toggle-btn {
+    width: 100%;
+    padding: 10px 30px;
+    cursor: pointer;
+    border: 0;
+    outline: none;
+    border-radius: 30px;
+    position: relative;
+    background-image: linear-gradient(to right, #8baaaa, #ae8b9c);
+}
+
+.toggle-btn:hover {
+    background-image: linear-gradient(to right, #ec77ab 0%, #7873f5 100%);
+}
+
+#btn {
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 110px;
+    height: 100%;
+    background-image: linear-gradient(to right, #8baaaa, #ae8b9c);
+    border-radius: 30px;
+}
+
+.input-group {
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    width: 340px;
+}
+
+.input-field {
+    width: 135px;
+    padding: 10px 0;
+    margin: 5px 0;
+    border-top: 0;
+    border-bottom: 1px solid black;
+    border-left: 0;
+    border-right: 0;
+    outline: none;
+    background: transparent;
+}
+
+.cut {
+    width: 60px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 0;
+    outline: none;
+    border-radius: 5px;
+    position: absolute;
+    left: 30%;
+    top: 89%;
+    background-image: linear-gradient(to right, #8baaaa, #ae8b9c);
+}
+.cut:hover{
+    background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
+}

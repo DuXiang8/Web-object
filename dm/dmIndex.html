@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 正确显示来源于网络的图片 -->
+    <!-- <meta name="referrer" content="never"> -->
+    <!-- <meta name="referrer" content="noreferrer"> -->
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/daCss.css">
+    <link rel="stylesheet" href="./font/iconfont.css">
+</head>
+
+<body>
+    <!-- header -->
+    <div id="header" class="container-fluid">
+        <div class="container header-content">
+            <div class="header-left">
+                <a href="#">
+                    <img src="./images/dmLog.png" alt="">
+                </a>
+            </div>
+            <div class="header-right">
+                <span class="iconfont icon-zhuce"></span><a href="./pages/dmRes.html">注册</a>
+                <span class="iconfont icon-dengru"></span><a href="#" name="login">登入</a>
+                <span class="iconfont icon-tuichu"></span><a href="#" name="exit">退出登入
+                    <span class="iconfont icon-qicheqianlian-1-copy"></span><a href="#" name="shopCar">购物车</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 轮播图 -->
+    <div class="container-fluid" id="banner">
+        <div class="banner">
+            <ul>
+                <li><a href="#" name="loop"><img src="./images/dmLoop.png" alt=""></a></li>
+                <li><a href="#" name="loop"><img src="./images/dmLoop2.jpg" alt=""></a></li>
+                <li><a href="#" name="loop"><img src="./images/dmLoop3.jpg" alt=""></a></li>
+                <li><a href="#" name="loop"><img src="./images/dmLoop.png" alt=""></a></li>
+                <li><a href="#" name="loop"><img src="./images/dmLoop2.jpg" alt=""></a></li>
+            </ul>
+            <ol></ol>
+            <div class="od">
+                <a href="JavaScript:;" name="left" class="iconfont icon-left"></a>
+                <a href="JavaScript:;" name="right" class="iconfont icon-jiantou"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- nav -->
+    <div class="container" id="nav">
+        <ul>
+            <li>
+                <a href="./pages/dmList.html?ctl=演唱会">
+                    <p class="iconfont icon-huwaiyanchanghui"></p>
+                    <p>演唱会</p>
+                </a>
+            </li>
+            <li>
+                <a href="./pages/dmList.html?ctl=话剧歌剧">
+                    <p class="iconfont icon-huaju-"></p>
+                    <p>话剧歌剧</p>
+                </a>
+            </li>
+            <li>
+                <a href="./pages/dmList.html?ctl=体育">
+                    <p class="iconfont icon-tiyu"></p>
+                    <p>体育比赛</p>
+                </a>
+            </li>
+            <li>
+                <a href="./pages/dmList.html?ctl=舞蹈芭蕾">
+                    <p class="iconfont icon-wudao"></p>
+                    <p>舞蹈芭蕾</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- column1 -->
+    <div class="container column1" id="column"></div>
+
+    <!-- column2 -->
+    <div class="container column2" id="column"></div>
+
+    <!-- column3 -->
+    <div class="container column3" id="column"></div>
+
+    <!-- column4 -->
+    <div class="container column4" id="column"></div>
+
+    <!-- footer -->
+    <div class="container-fluid" id="footer">
+        <div class="container">
+            <div class="footer">
+                <a href="JavaScript:;">帮助中心</a><span>|</span>
+                <a href="JavaScript:;">公司介绍</a><span>|</span>
+                <a href="JavaScript:;">公司大事记</a><span>|</span>
+                <a href="JavaScript:;">协议及隐私权政策</a><span>|</span>
+                <a href="JavaScript:;">廉正举报</a><span>|</span>
+                <a href="JavaScript:;">联系合作</a><span>|</span>
+                <a href="JavaScript:;">招聘信息</a><span>|</span>
+                <a href="JavaScript:;">防骗秘籍</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="scrollBox">
+        <p class="iconfont icon-huidaodingbu"></p>
+        <p>送我上去</p>
+    </div>
+
+    <script src="./js/dmJs.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/ajax.js"></script>
+    <script src="./js/utils.js"></script>
+    <script>
+        //点击登入超链接
+        $('[name="login"]').click(function(){
+            window.location.href = `./pages/dmLogin.html?${window.location.href}`;
+        })
+
+        //点击退出按钮
+        $('[name="exit"]').click(function(){
+            mySetCookie('login',2,-1);
+            window.alert('您已退出登入');
+        })
+
+        //点击购物车
+        $('[name="shopCar"]').click(function(){
+            let cookieObj = myGetCookie(document.cookie);
+            // 判断是否登入
+            if(cookieObj.login == '1'){
+                //证明已登入 允许进购物车
+                window.location.href = './pages/dmShopCar.html';
+            }else if(cookieObj.login == undefined){
+                //证明尚未登入 阻止进购物车
+                let bool = window.confirm('您还没有登入,点击确认登入');
+                // 点击确认跳转登入页面
+                if(bool === true){
+                    window.location.href = `./pages/dmLogin.html?${window.location.href}`;
+                }
+            }
+        })
+
+        //点击轮播图
+        $('[name="loop"]').click(function(){
+            window.alert('暂无此功能');
+        })
+
+        // 滚动条事件
+        $(window).scroll(function(){
+            if($(window).scrollTop() > 200){
+                $('.scrollBox').slideDown();
+            }else{
+                $('.scrollBox').slideUp();
+            }
+        })
+
+        // 点击.scrollBox盒子触发事件
+        $('.scrollBox').click(function(){
+            $('html').animate({scrollTop:0},1000)
+        })
+    </script>
+</body>
+
+</html>

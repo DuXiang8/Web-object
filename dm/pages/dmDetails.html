@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/dmDetails.css">
+    <link rel="stylesheet" href="../font/iconfont.css">
+</head>
+
+<body>
+    <div class="container cont clear" id="details"></div>
+    <div class="container" id="content">
+        <ul>
+            <li class="active">购票须知</li>
+            <li>观影须知</li>
+        </ul>
+        <ol>
+            <li class="active">
+                <p>限购规则</p>
+                <p>每笔订单最多购买6张</p>
+                <p>退票/换票规则</p>
+                <p>票品为有价证券，非普通商品，其背后承载的文化服务具有时效性，稀缺性等特征，不支持退换</p>
+                <p>入场规则</p>
+                <p>须打开【APP-我的票夹】扫码入场，截图无效。</p>
+                <p>儿童购票</p>
+                <p>儿童一律凭票入场</p>
+                <p>发票说明</p>
+                <p>演出开始前，去【APP-订单详情页】提交发票申请。演出结束后1个月左右邮寄给你，需自付邮费</p>
+                <p>实名购票规则</p>
+                <p>无需实名购票</p>
+                <p>异常排单说明</p>
+                <p>对于异常订购行为，大麦网有权在订单成立或者生效之后取消相应订单。异常订购行为包括但不限于以下情形:<br>(1)通过同一ID订购超出限购张数的订单。
+                    <br>(2)经合理判断认为非真实消费者的下单行为，包括但不限于通过批量相同或虚构的支付账号、收货地址（包括下单时填写及最终实际收货地址）、收件人、电话号码订购超出限购张数的订单</p>
+            </li>
+            <li>
+                <p>演出时长</p>
+                <p>约90分钟(以现场为准)</p>
+                <p>入场时间</p>
+                <p>请于开始前约30分钟入场</p>
+                <p>禁止携带物品</p>
+                <p>由于安保和版权的原因，大多数演出、展览及比赛场所禁止携带食品、饮料、专业摄录设备、打火机等物品，请您注意现场工作人员和广播的提示，予以配合</p>
+                <p>寄存说明</p>
+                <p>无寄存处</p>
+            </li>
+        </ol>
+    </div>
+    <div class="pay">成功加入购物车</div>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        //获取地址栏中携带的参数ctl
+        let ctl = decodeURIComponent(window.location.search).substr(1);//id=...
+        let arr = ctl.split('=');
+        let id = arr[1];
+
+        //定义一个变量存储当前函数中获取到的数据内容
+        let result = [];
+
+        var num = 1;
+        var p = 0;
+        $.ajax({
+            url: 'https://detail.damai.cn/subpage',
+            data: {
+                itemId: id,
+                apiVersion: '2.0',
+                dmChannel: 'pc@damai_pc',
+                bizCode: 'ali.china.damai',
+                scenario: 'itemsku',
+                dataType: '',
+                dataId: '',
+                privilegeActId: ''
+            },
+            dataType: 'jsonp',
+            success: function (res) {
+                // 将获取到的当前数据内容赋值给全局变量result
+                result = res;
+                let priceStr = '';
+                let priceArr = res.perform.skuList;//dashPrice
+                //--------------------------------
+
+                // 获取第一个票档价格为页面默认价格
+                p = priceArr[0].dashPrice;
+                priceArr.forEach(function (item) {
+                    priceStr += `<a href="JavaScript:;" name="priceA" class="activeA">${item.dashPrice}元</a>`
+                })
+                let str = '';
+                str = `<div class="details-left">
+            <a href="#">
+                <img src="${res.itemBasicInfo.mainImageUrl}" alt="">
+            </a>
+        </div>
+        <div class="details-right">
+            <p>${res.itemBasicInfo.itemTitle}</p>
+            <p><span>时间:</span><span>${res.perform.performName}</span></p>
+            <p><span>场馆:</span><span>${res.itemBasicInfo.cityName}</span><span>|</span><span>${res.itemBasicInfo.venueName}</span><span class="iconfont icon-weizhi"></span></p>
+            <p><span>场次:</span><span>${res.perform.performName}</span></p>
+            <div class="price-box clear">
+                <p>票档:</p>
+                <p class="a"></p>
+            </div>
+
+            <p class="clear"><span>数量:</span><button class="lose">-</button><span class="ticketNum">${num}张</span><button class="add">+</button><span>每笔订单限购6张</span></p>
+            <p><span>合计:</span><span class="prices">￥${parseInt(priceArr[0].dashPrice)}元</span></p>
+            <button class="inCar">加入购物车</button>
+        </div>`;
+
+
+                // tab切换
+                $('.cont').html(str);
+                $('.a').html(priceStr);
+            }
+        })
+
+        $('ul>li').click(function () {
+            $(this).addClass('active')
+                .siblings()
+                .removeClass('active')
+                .parent()
+                .next()
+                .find('li')
+                .removeClass('active')
+                .eq($(this).index())
+                .addClass('active');
+        })
+
+
+        // 异步程序
+        // 事件委托形式给票档添加点击事件
+        // 改变对应的价格
+        // 动态生成的子级事件目标必须使用事件委托才能访问
+        // 并且父级必须不是动态生成的 例如.cont不是动态生成的
+        var priceNum = 0;
+        $('.cont').on('click', '[name="priceA"]', function () {
+            let price = parseInt($(this)[0].innerHTML);
+            $('.prices').html('￥' + price + '元');
+            p = price;
+            $('.ticketNum').html(1 + '张');
+            if (num == 6) {
+                $('.add').prop('disabled', false);
+                num = 1;
+            }
+            num = 1;
+        }).on('click', '.lose', function () {
+            num--;
+
+            // 获取当前默认价格
+            var getPrice = p;
+            // 当前删减数量后的总价格
+            if (num == 0) {
+                priceNum = getPrice;
+            } else {
+                priceNum = getPrice * num;
+            }
+            //priceNum 总价格
+            $('.prices').html('￥' + priceNum + '元');//700
+
+
+            $('.add').prop('disabled', false);
+
+            if (num == 1 || num == 0) {
+                if (num == 0) {
+                    $('.ticketNum').html(1 + '张');
+                } else {
+                    $('.ticketNum').html(num + '张');
+                }
+                $('.lose').prop('disabled', true);
+            } else {
+                $('.ticketNum').html(num + '张');
+            }
+        }).on('click', '.add', function () {
+            num++;
+            // 获取当前默认价格
+            var getPrice = p;
+            // 当前添加数量后的总价格
+            if (num == 0) {
+                priceNum = getPrice;
+            } else {
+                priceNum = getPrice * num;
+            }
+            //priceNum 总价格
+            $('.prices').html('￥' + priceNum + '元');//700
+
+            $('.lose').prop('disabled', false);
+            if (num == 6) {
+                $('.ticketNum').html(num + '张');
+                $('.add').prop('disabled', true);
+            } else {
+                $('.ticketNum').html(num + '张');
+            }
+        })
+
+
+        // 事件委托
+        // 设置当前被点击的票档样式
+        $('.cont').on('click', '.activeA', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+        })
+
+
+
+
+        /*
+            点击添加购物车按钮的时候， 就是为了在 localStorage 里面找到一个数组
+            1. 如果 localStorage 里面没有这个数组， 那么我自己创建一个空数组
+            2. 如果 localStorage 里面有这个数组， 那么我就遍历数组
+              + 找到一个 id 一样的数据， 如果有， 就 num ++
+              + 找到一个 id 一样的数据， 如果没有， 就直接把这个数据添加到数组里面
+        */
+        // $('.cont').on('click', '.inCar', function () {
+
+        //     // 1. 获取 localStorgae 里面的数组， 有就用， 没有直接赋值为 []
+        //     // 从 223 行以后， 那么 dataArr 一定是一个数组， 就是里面不一定有没有数据
+        //     const dataArr = JSON.parse(window.localStorage.getItem('car')) || []
+
+        //     // 2. 直接遍历 dataArr
+        //     // 2-1. 判断数组里面有没有这个数据
+        //     const flag = dataArr.some(item => item.itemBasicInfo.itemId === result.itemBasicInfo.itemId)
+        //     // 2-2. 根据数组里面有没有这个数据进行操作
+        //     if (flag) {
+        //         dataArr.forEach(item => {
+        //             if (item.itemBasicInfo.itemId === result.itemBasicInfo.itemId) item.num++
+        //         })
+        //     } else {
+        //         result.num = 1
+        //         result.buy = true
+        //         dataArr.push(result)
+        //     }
+
+        //     // 从新存储
+        //     window.localStorage.setItem('car', JSON.stringify(dataArr))
+        // })
+
+
+
+        $('.cont').on('click', '.inCar', function () {
+
+            // pay
+            $('.pay').fadeIn(500, 'linear').fadeOut(2000, 'linear');
+
+            //添加价格信息
+            // 数量
+            var ticketNum = parseInt($('.ticketNum').html());
+            // 当前选择票档
+            var priceType = parseInt(p);
+            var priceObj = { ticketNum: ticketNum, priceType: priceType, priceNum: (priceType * ticketNum) };
+
+            let cookieObj = myGetCookie(document.cookie);
+            // 判断是否登入
+            if (cookieObj.login == '1') {
+                //证明已登入 允许进购物车
+                // window.location.href = './dmShopCar.html';
+                if (localStorage.getItem('car') === null) {
+                    // 创建一个变量存储购物车列表所有数据
+                    var dataArr = [];
+                    // 给当前数据添加数量属性
+                    result.num = 1;
+                    // 添加购买状态
+                    result.buy = true;
+
+                    // 添加价格信息
+                    result.priceObj = priceObj;
+
+                    dataArr.push(result);
+                    // 在localStorage 中添加当前数据
+                    // localStorage.setItem('car', JSON.stringify(dataArr));
+                } else {
+                    // 设置一个开关 方便遍历操作 类似判断质数操作
+                    // 默认为true 该商品不在所有商品数据列表中
+                    var bool = true;
+                    // 获取localStorage中所有数据
+                    var dataArr = JSON.parse(localStorage.getItem('car'));
+                    // 遍历dataArr中所有数据
+                    dataArr.forEach(function (item) {
+                        // 判断当前商品数据是否已经存在 是在原有num值基础上++ 操作
+                        if (item.itemBasicInfo.itemId === result.itemBasicInfo.itemId) {
+                            item.num++;
+
+                            // 添加价格信息
+                            item.priceObj = priceObj;
+
+                            // 此时证明当前商品在购物车数据中存在
+                            // 给开关赋值false
+                            bool = false;
+                            // localStorage.setItem('car', JSON.stringify(dataArr));
+                        }
+                    })
+                    // 判断开关
+                    if (bool === true) {
+
+                        // 给当前数据添加数量属性
+                        result.num = 1;
+                        // 添加购买状态
+                        result.buy = true;
+
+                        // 添加价格信息
+                        result.priceObj = priceObj;
+
+                        // 添加当前商品到购物车数据列表中
+                        dataArr.push(result);
+                        console.log("开关", dataArr);
+                        // localStorage.setItem('car', JSON.stringify(dataArr));
+                    }
+                }
+                // 将更新的数据写入到localStorage中
+                window.localStorage.setItem('car', JSON.stringify(dataArr));
+            } else if (cookieObj.login == undefined) {
+                //证明尚未登入 阻止进购物车
+                let bool = window.confirm('您还没有登入,点击确认登入');
+                // 点击确认跳转登入页面
+                if (bool === true) {
+                    window.location.href = `./dmLogin.html?${window.location.href}`;
+                } else {
+                    return false;
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

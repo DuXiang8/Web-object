@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/dmRes.css">
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="form-box">
+            <h2>SIGNIN</h2>
+            <div class="button-box">
+                <button type="button" name="reg" class="toggle-btn">sign in</button>
+            </div>
+            <div class="input-group">
+                注册账号: <input type="text" name="un" class="input-field"><span name="uns"></span><br>
+                注册密码: <input type="password" name="ps" class="input-field"><span name="pss"></span><br>
+                重复密码: <input type="password" name="reps" class="input-field"><span name="repss"></span><br>
+                验 证 码: <input type="text" name="yzm" class="input-field"><span name="yzmo"></span><br>
+                <span>验证码:</span><span name="yzms"></span><button name="btn" class="cut" type="button">换一张</button><br>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../js/jquery.min.js"></script>
+    <script>
+
+        //账号
+        var inputUN = document.querySelector('[name="un"]');
+        var uNSpan = document.querySelector('[name="uns"]');
+
+        inputUN.onfocus = function () {
+            var int = inputUN.value;
+            if (int.length > 0) {
+                change();
+                return;
+            } else {
+                uNSpan.innerHTML = '请您输入,账号不能为空';
+            }
+            uNSpan.innerHTML = '请您输入账号,不能为空';
+            uNSpan.style.color = 'black';
+        }
+        inputUN.oninput = function () {
+            var int = inputUN.value;
+            uNSpan.style.color = 'black';
+        }
+        change();
+        function change() {
+            inputUN.onchange = function () {
+                var int = inputUN.value;
+                if (int != '') {
+                    uNSpan.innerHTML = '您输入的账号符合规范';
+                } else {
+                    uNSpan.innerHTML = '您输入的账号为空';
+                    uNSpan.style.color = 'red';
+                }
+            }
+        }
+
+        //密码
+        var inputPS = document.querySelector('[name="ps"]');
+        var psS = document.querySelector('[name="pss"]');
+
+        inputPS.onfocus = function () {
+            var int = inputPS.value;
+            if (int.length > 0) {
+                changeT();
+                return;
+            } else {
+                psS.innerHTML = '请输入6-10位密码';
+            }
+            psS.innerHTML = '请输入6-10位密码';
+            psS.style.color = 'black';
+        }
+        changeT();
+        function changeT() {
+            inputPS.oninput = function () {
+                var int = inputPS.value;
+                if (int.length < 6) {
+                    psS.innerHTML = '输入的密码过短';
+                    psS.style.color = 'red';
+                } else if (int.length > 10) {
+                    psS.innerHTML = '输入的密码过长';
+                    psS.style.color = 'red';
+                } else {
+                    psS.innerHTML = '您输入的密码符合要求';
+                    psS.style.color = 'black';
+                }
+            }
+        }
+
+        inputPS.onchange = function () {
+            var int = inputPS.value;
+            if (int.length >= 6 && int.length <= 10) {
+                psS.innerHTML = '您输入的密码符合要求';
+                psS.style.color = 'black';
+            } else if (int.length < 6) {
+                psS.innerHTML = '您输入的密码过短';
+                psS.style.color = 'red';
+            } else {
+                psS.innerHTML = '您输入的密码过长';
+                psS.style.color = 'red';
+            }
+        }
+
+
+
+        // 再次密码
+        var inputRePs = document.querySelector('[name="reps"]');
+        var rePsS = document.querySelector('[name="repss"]');
+
+        inputRePs.onfocus = function () {
+            var int = inputRePs.value;
+            if (int.length > 0) {
+                changeTr();
+                return;
+            } else {
+                rePsS.innerHTML = '请再次输入密码';
+            }
+            rePsS.innerHTML = '请再次输入密码';
+            rePsS.style.color = 'black';
+        }
+        changeTr();
+        function changeTr() {
+            inputRePs.onchange = function () {
+                var int = inputRePs.value;
+                if (int !== inputPS.value) {
+                    rePsS.innerHTML = '两次密码不一致';
+                    rePsS.style.color = 'red';
+                } else {
+                    rePsS.innerHTML = '两次密码一致';
+                    rePsS.style.color = 'black';
+                }
+            }
+        }
+
+        var btN = document.querySelector('[name="btn"]');
+        //换一张验证码
+        btnYzm();
+        function btnYzm() {
+            btN.onclick = function () {
+                yzmSpan.innerHTML = setYzm()
+                set();
+            }
+        }
+
+
+
+        //验证码
+        var numStr = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        function setYzm() {
+            var newStr = '';
+            while (newStr.length < 6) {
+                var num = parseInt(Math.random() * numStr.length);
+                if (newStr.indexOf(numStr[num]) === -1) {
+                    newStr += numStr[num];
+                }
+            }
+            return newStr;
+        }
+        var inputYzm = document.querySelector('[name="yzm"]');
+        var yzmSpanO = document.querySelector('[name="yzmo"]');
+        var yzmSpan = document.querySelector('[name="yzms"]');
+
+        set();
+        function set() {
+            yzmSpan.innerHTML = setYzm();
+            var yzm = yzmSpan.innerHTML;
+
+            inputYzm.onfocus = function () {
+                var str = inputYzm.value;
+                if (str.length > 0) {
+                    setY();
+                    return;
+                } else {
+                    yzmSpanO.innerHTML = '请输入验证码';
+                    yzmSpanO.style.color = 'black';
+                }
+                yzmSpanO.innerHTML = '请输入验证码';
+                yzmSpanO.style.color = 'black';
+            }
+            setY();
+            function setY() {
+                inputYzm.onchange = function () {
+                    var str = inputYzm.value;
+                    var newStr = str.toLocaleLowerCase();
+                    var yzmo = yzm.toLocaleLowerCase();
+                    if (newStr === yzmo) {
+                        yzmSpanO.innerHTML = '验证成功';
+                        yzmSpanO.style.color = 'black';
+                    } else {
+                        yzmSpanO.innerHTML = '验证码错误';
+                        yzmSpanO.style.color = 'red';
+                    }
+                }
+            }
+        }
+
+        //获取提交按钮标签对象
+        var oReg = document.querySelector('[name="reg"]');
+        //点击提交按钮事件
+        oReg.addEventListener('click', () => {
+            console.log(123);
+            //重新获取标签对象以防不必要的错误出现
+            //账号
+            var userName = document.querySelector('[name="un"]').value;
+            //密码
+            var userPwd1 = document.querySelector('[name="ps"]').value;
+            //确认密码
+            var userPwd2 = document.querySelector('[name="reps"]').value;
+            //验证码
+            var oYzm = document.querySelector('[name="yzm"]').value;
+            //验证码文字
+            var oYzm2 = document.querySelector('[name="yzms"]').innerHTML;
+
+            //验证判断
+            if (userName == '') {
+                window.alert('账号不能为空');
+                return;
+            }
+
+            if (userPwd1 == '') {
+                window.alert('密码不能为空');
+                return;
+            }
+
+            if (userPwd2 == '') {
+                window.alert('确认密码不能为空');
+                return;
+            }
+
+            if (oYzm == '') {
+                window.alert('验证码不能为空');
+                return;
+            }
+
+            // 确认密码必须和密码一致
+            if (userPwd1 !== userPwd2) {
+                window.alert('密码和确认密码不一致');
+                return;
+            }
+
+            // 验证码必须正确
+            // 统一验证码的大小写,也即是不区分验证码输入的大小写
+            if (oYzm.toLowerCase() !== oYzm2.toLowerCase()) {
+                window.alert('验证码不正确');
+                return;
+            }
+            $.ajax({
+                url: '../server/res.php',
+                type: 'post',
+                dataType: 'json',
+                data: { userName: userName, userPwd: userPwd1 },
+                success: function (res) {
+                    if (res == '1') {
+                        window.alert('注册成功,点击确定,跳转首页');
+                        window.location.href = '../dmIndex.html';
+                    } else {
+                        window.alert('注册失败');
+                    }
+                }
+            })
+
+        })
+
+    </script>
+</body>
+
+</html>

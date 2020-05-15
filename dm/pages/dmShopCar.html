@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/dmShopCar.css">
+    <link rel="stylesheet" href="../font/iconfont.css">
+</head>
+
+<body>
+    <!-- header -->
+    <div class="container header">
+        <p><span>总计:</span><span class="total">total</span></p>
+        <p><span>总票数:</span><span class="allpoll">allpoll</span></p>
+        <p class="btn">
+            <button name="all">全选</button>
+            <button name="allno">全不选</button>
+            <button name="delcheck">删除选中</button>
+        </p>
+    </div>
+
+    <!-- 购物车列表 -->
+    <div class="container">
+        <div class="list-content">
+            <ul class="list"></ul>
+        </div>
+        <p class="op"></p>
+    </div>
+
+    <!-- 页面按钮 -->
+    <div class="scrollBox">
+        <p class="iconfont icon-huidaodingbu"></p>
+        <p>送我上去</p>
+    </div>
+
+
+    <script src="../js/jquery.min.js"></script>
+    <script>
+
+        // 获取localStorage中的car数据
+        var dataArr = JSON.parse(localStorage.getItem('car'));
+        console.log(dataArr);
+
+
+        var arr = [];
+        // 总计
+        // 点击加减后 的总计
+        var to = 0;
+        // 总票数
+        // 点击加减后 的总票数
+        var all = 0;
+        // 存储加减后的总价格
+        var priceNum = 0;
+
+        // 总计
+        var total = 0;
+        // 总票数
+        var allpoll = 0;
+
+        // 遍历渲染购物车列表
+        data();
+        function data() {
+
+            var str = '';
+            // 总计
+            total = 0;
+            // 总票数
+            allpoll = 0;
+            var index = 0;
+            dataArr.forEach(function (item) {
+                index++;
+
+
+                str += `<li>
+                    <div class="list-left">
+                        <div class="img">
+                            <a href="JavaScript:;">
+                                <img src="${item.itemBasicInfo.mainImageUrl}" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="list-right">
+                        <p>${item.itemBasicInfo.itemTitle}</p>
+                        <p><span>票档:</span><span class="ticket">当前选择的票档:${item.priceObj.priceType}元</span></p>
+                        <p class="clear" index="${index}">
+                            <span>数量:</span>
+                            <button class="lose" keylose="${index - 1}">-</button>
+                            <span class="ticketNum">${item.priceObj.ticketNum}</span>
+                            <button class="add" keyadd="${index - 1}">+</button><span>每笔订单限购6张</span>
+                        </p>
+                        <p><span>总价:</span><span class="prices">${item.priceObj.priceNum}元<span></p>
+                        <button class="del" delindex="${index - 1}">删除</button>
+                        <button class="inCar" inCarindex="${index - 1}">结算</button>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" class="check" checked>
+                    </div>
+                </li>`;
+
+                // 总计
+                total += (item.priceObj.priceType) * (item.priceObj.ticketNum);
+                // 总票数
+                allpoll += item.priceObj.ticketNum;
+
+                // 向数组中添加遍历的所有商品不同数量
+                arr.push(item.priceObj.ticketNum);
+            })
+            // 向ul中添加遍历得到的li
+            $('.list').html(str);
+            // 总计
+            $('.total').html(total + '元');
+            // 总票数
+            $('.allpoll').html(allpoll + '张');
+
+            if (dataArr == '') {
+                $('.op').html('空空如也！！！');
+            }
+        }
+
+
+
+        // 点击头部按钮事件
+        var oBtn = document.querySelector('.btn');
+        oBtn.addEventListener('click', function (e) {
+            if (e.target.getAttribute('name') === 'all') {
+                // 页面不自动刷新 调用函数 默认给所有checked添加属性值
+                data();
+                $('.checkbox>input').attr('checked', true);
+                // 总计
+                $('.total').html(total + '元');
+                // 总票数
+                $('.allpoll').html(allpoll + '张');
+            }
+
+            if (e.target.getAttribute('name') === 'allno') {
+                data();
+                $('.checkbox>input').attr('checked', false);
+                // 总计
+                $('.total').html(0 + '元');
+                // 总票数
+                $('.allpoll').html(0 + '张');
+            }
+            if ((e.target.getAttribute('name') === 'delcheck')) {
+                // 获取页面所有input标签对象
+                var inputArr = $('.checkbox>input');
+                inputArr.each(function (key, item) {
+                    if (item.checked == true) {
+                        // 删除选中索引对应的数据内容
+                        dataArr.splice(key, 1);
+                        // 将数据重新写入localStorage
+                        localStorage.setItem('car', JSON.stringify(dataArr));
+                        // 重新获取localStorage中的数据 给全局变量dataArr赋值
+                        dataArr = JSON.parse(localStorage.getItem('car'));
+                        // 调用封装好的data函数 遍历dataArr重新渲染页面
+                        data();
+                    }
+                });
+            }
+        });
+
+
+
+        
+        // 删除列表商品、购买、选择
+        var oUl = document.querySelector('.list');
+        oUl.addEventListener('click', function (e) {
+            // 点击列表删除按钮
+            if (e.target.getAttribute('class') === 'del') {
+                // 拿到当前点击删除按钮对应的索引
+                var index = e.target.getAttribute('delindex');
+                // 根据删除按钮对应的索引 删除对应索引dataArr中的数据
+                dataArr.splice(index, 1);
+                // 将数据重新写入localStorage
+                localStorage.setItem('car', JSON.stringify(dataArr));
+                // 重新获取localStorage中的数据 给全局变量dataArr赋值
+                dataArr = JSON.parse(localStorage.getItem('car'));
+                // 调用封装好的data函数 遍历dataArr重新渲染页面
+                data();
+            }
+            // 点击加入结算按钮
+            if (e.target.getAttribute('class') === 'inCar') {
+                // 拿到当前点击删除按钮对应的索引
+                var index = e.target.getAttribute('inCarindex');
+                // 根据删除按钮对应的索引 删除对应索引dataArr中的数据
+                dataArr.splice(index, 1);
+                // 将数据重新写入localStorage
+                localStorage.setItem('car', JSON.stringify(dataArr));
+                // 重新获取localStorage中的数据 给全局变量dataArr赋值
+                dataArr = JSON.parse(localStorage.getItem('car'));
+
+                alert('支付成功！');
+                // 调用封装好的data函数 重新渲染页面
+                data();
+            }
+            // 点击checked按钮
+            if (e.target.getAttribute('class') === 'check') {
+                var Total = 0;
+                var Allpoll = 0;
+                $('.checkbox>input').each(function (k, i) {
+                    if (i.checked === true) {
+                        // 总计
+                        Total += (dataArr[k].priceObj.priceType) * (dataArr[k].priceObj.ticketNum);
+                        // 总票数
+                        Allpoll += dataArr[k].priceObj.ticketNum;
+                    }
+                })
+                // 总计
+                $('.total').html(Total + '元');
+                // 总票数
+                $('.allpoll').html(Allpoll + '张');
+            }
+        });
+
+
+        // 遍历商品数量数组 找出数值为6的最大值数量和数值为1的最小数值 并给加减按钮设置disabled 防止刷新按钮重置
+        arr.forEach(function (value, key) {
+            // 判断数量数值 防止刷新页面 加减按钮重置
+            if (value == 6) {
+                $(`[keyadd=${key}]`).prop('disabled', true);
+            }
+            if (value == 1) {
+                $(`[keylose=${key}]`).prop('disabled', true);
+            }
+        })
+
+        // 滚动条事件
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                $('.scrollBox').slideDown();
+            } else {
+                $('.scrollBox').slideUp();
+            }
+            if ($(window).scrollTop() > 50) {
+                $('.header').addClass('slidDown');
+            } else {
+                $('.header').removeClass('slidDown');
+            }
+        })
+
+        // 点击.scrollBox盒子触发事件
+        $('.scrollBox').click(function () {
+            $('html').animate({ scrollTop: 0 }, 1000)
+        })
+
+
+        // + - 点击按钮 事件委托形式
+        $('.list').on('click', '.lose', function () {
+            // 获取对应的数量
+            var num = $(this).parent().find('.ticketNum').html();
+            // 获取对应的票档价格
+            var ticketPrice = parseInt($(this).parent().prev().find('.ticket').html().split(':')[1]);
+            num--;
+            $(this).parent().find('.ticketNum').html(num);
+
+            // 当前删减数量后的总价格
+            if (num == 0) {
+                priceNum = ticketPrice;
+            } else {
+                priceNum = ticketPrice * num;
+            }
+
+            //priceNum 总价格
+            $(this).parent().next().find('.prices').html(priceNum + '元');
+
+            $(this).parent().find('.add').prop('disabled', false);
+
+            // 更新价格 数量 总价数据
+            var priceObj = { ticketNum: num, priceType: ticketPrice, priceNum: priceNum };
+
+            if (num == 1 || num == 0) {
+                if (num == 0) {
+                    $(this).parent().find('.ticketNum').html(1);
+                } else {
+                    $(this).parent().find('.ticketNum').html(num);
+                }
+                $(this).prop('disabled', true);
+            } else {
+                $(this).parent().find('.ticketNum').html(num);
+            }
+
+            // 把加减后的数量 价格 总价写入到localStorage数据中 方便刷新数据不是原始数据
+            dataArr[($(this).parent().attr('index') - 1)].priceObj = priceObj;
+            localStorage.setItem('car', JSON.stringify(dataArr));
+
+            // 获取localStorage中减减后的数据 重新渲染页面
+            const dataArr2 = JSON.parse(localStorage.getItem('car'));
+            // 再次减减 给全局to all 赋值为0 防止在上一次的基础上值累加
+            to = 0;
+            all = 0;
+            dataArr2.forEach(function (value) {
+                // 总计
+                to += (value.priceObj.priceType) * (value.priceObj.ticketNum);
+                // 总票数
+                all += value.priceObj.ticketNum;
+
+                // 总计
+                $('.total').html(to + '元');
+                // 总票数
+                $('.allpoll').html(all + '张');
+            })
+        }).on('click', '.add', function () {
+
+            // 获取对应的数量
+            var num = $(this).parent().find('.ticketNum').html();
+            // 获取对应的票档价格
+            var ticketPrice = parseInt($(this).parent().prev().find('.ticket').html().split(':')[1]);
+            num++;
+            if (num == 0) {
+                priceNum = ticketPrice;
+            } else {
+                priceNum = ticketPrice * num;
+            }
+
+            // 更新价格 数量 总价数据
+            var priceObj = { ticketNum: num, priceType: ticketPrice, priceNum: priceNum };
+
+            //将通过商品票档和数量求出的总价格渲染到页面
+            $(this).parent().next().find('.prices').html(priceNum + '元');
+
+            // 点击加加后给减减属性disabled的属性值设置为false 显示可以点击
+            $(this).parent().find('.lose').prop('disabled', false);
+
+            if (num == 6) {
+                $(this).parent().find('.ticketNum').html(num);
+
+                // 如果当前商品数量添加到最大购买值给加加添加disabled属性属性值设置为true 不能再点击
+                $(this).prop('disabled', true);
+            } else {
+                // 将加加后的数量显示在页面
+                $(this).parent().find('.ticketNum').html(num);
+            }
+
+            // 把加减后的数量 价格 总价写入到localStorage数据中 方便刷新数据不是原始数据
+            dataArr[($(this).parent().attr('index') - 1)].priceObj = priceObj;
+            localStorage.setItem('car', JSON.stringify(dataArr));
+
+
+            // 获取localStorage中加加后的数据 重新渲染页面
+            const dataArr3 = JSON.parse(localStorage.getItem('car'));
+            // 再次加加 给全局to all 赋值为0 防止在上一次的基础上值累加
+            to = 0;
+            all = 0;
+            dataArr3.forEach(function (value) {
+                // 总计
+                to += (value.priceObj.priceType) * (value.priceObj.ticketNum);
+                // 总票数
+                all += value.priceObj.ticketNum;
+
+                // 总计
+                $('.total').html(to + '元');
+                // 总票数
+                $('.allpoll').html(all + '张');
+            })
+        })
+    </script>
+</body>
+
+</html>

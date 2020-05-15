@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/dmLogin.css">
+    <link rel="stylesheet" href="../font/iconfont.css">
+</head>
+<body>
+    <div class="hero">
+        <div class="form-box">
+            <h2>LOGIN</h2>
+            <div class="button-box">
+                <button type="button" name="btn" class="toggle-btn">Log In</button>
+            </div>
+            <div class="input-group">
+                <span class="iconfont icon-user-name"></span>
+                <input type="text" name="username" class="input-field" placeholder="UserName">
+                <span class="iconfont icon-wodemima"></span>
+                <input type="password" name="userpwd" class="input-field" placeholder="UserPassWord">
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        $('[name="btn"]').click(function(){
+            //获取输入的账号
+            let userName = $('[name="username"]').val();
+            let userPwd = $('[name="userpwd"]').val();
+            // 获取输入的密码
+            $.ajax({
+                url: '../server/login.php',
+                data : {userName:userName,userPwd:userPwd},
+                type: 'post',
+                dataType: 'json',
+                success: function(res){
+                    console.log(res);//number
+                    if(res == '1'){
+                        window.alert('登入成功');
+                        //decodeURIComponent 地址栏信息中文显示
+                        //获取地址栏中源地址携带的参数
+                        let str = decodeURIComponent(window.location.search).substr(1);
+                        //设置cookie
+                        mySetCookie('login',1,7*24*60*60);
+                        //跳转返回原来地址
+                        window.location.href = str;
+                    }else{
+                        window.alert('登入失败,请重新输入');
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>

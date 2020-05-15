@@ -1,0 +1,232 @@
+/* 列表样式 */
+*{
+    margin: 0;
+    padding: 0;
+}
+ul,ol,li{
+    list-style: none;
+}
+img{
+    display: block;
+}
+a{
+    text-decoration: none;
+}
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.container-fluid {
+    width: 100%;
+    position: relative;
+}
+
+.clear::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.list-content{
+    width: 100%;
+    border: 1px solid #EFEFEF;
+}
+
+ul{
+    margin: 0 30px;
+}
+
+.list-content li{
+    display: flex;
+    border-bottom: 1px dashed #999;
+    padding: 25px 0px;
+}
+
+
+/* list-rleft */
+
+.list-left{
+    width: 180px;
+    position: relative;
+    margin-right: 15px;
+}
+
+.list-left .img img{
+    width: 180px;
+}
+
+.list-left .type{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    display: inline-block;
+    height: 20px;
+    font-size: 12px;
+    text-align: center;
+    background: #FF1268;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 5px;
+    line-height: 20px;
+}
+
+
+/* list-right */
+.list-right{
+    position: relative;
+}
+
+.list-right p:nth-of-type(1){
+    font-size: 16px;
+    color: black;
+}
+
+.list-right p:nth-of-type(2){
+    margin-top: 10px;
+    font-size: 14px;
+    color: #999;
+}
+
+.list-right p:nth-of-type(3){
+    margin-top: 10px;
+    font-size: 14px;
+    color: #999;
+}
+
+.list-right p:nth-of-type(3) span{
+    margin-right: 5px;
+}
+
+.list-right p:nth-of-type(3) .iconfont{
+    color: #FF1268;
+}
+
+.list-right p:nth-of-type(4) .iconfont{
+    color: #FF1268;
+}
+
+.list-right p:nth-of-type(4){
+    margin-top: 10px;
+    font-size: 14px;
+    color: #999;
+}
+
+.list-right p:nth-of-type(4) span{
+    margin-right: 5px;
+}
+
+.list-right p:nth-of-type(5){
+    position: absolute;
+    bottom: 0;
+    font-size: 16px;
+    color: #FF1268;
+}
+
+.list-right p:nth-of-type(5) span{
+    margin-right: 15px;
+}
+
+.list-right p:nth-of-type(5) span:nth-of-type(1){
+    font-weight: 800;
+}
+
+
+.list-right p:nth-of-type(5) span:nth-of-type(2){
+    font-size: 14px;
+    color: #999;
+}
+
+
+/* M-box */
+.M-box{
+    height: 50px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 50px;
+}
+
+.slidDown{
+    position: fixed;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.M-box a{
+    color: black;
+    margin: 0 20px;
+}
+.M-box a:nth-of-type(1):hover{
+    color: black;
+}
+.M-box a:nth-of-type(2):hover{
+    color: black;
+}
+.M-box a:nth-last-child(1):hover{
+    color: black;
+}
+.M-box a:nth-last-child(2):hover{
+    color: black;
+}
+/* 当前页数 */
+.M-box span{
+    color: #FF1268;
+}
+.M-box a:nth-of-type(1){
+    border: 1px solid #FF1268;
+    color: white;
+    border-radius: 3px;
+    font-size: 14px;
+    padding: 2px 5px;
+    background: #FF1268;
+}
+.M-box a:nth-of-type(2){
+    border: 1px solid #FF1268;
+    border-radius: 3px;
+    color: white;
+    font-size: 14px;
+    padding: 2px 5px;
+    background: #FF1268;
+}
+.M-box :nth-last-child(1){
+    border: 1px solid #FF1268;
+    border-radius: 3px;
+    font-size: 14px;
+    color: white;
+    padding: 2px 5px;
+    background: #FF1268;
+}
+.M-box :nth-last-child(2){
+    border: 1px solid #FF1268;
+    border-radius: 3px;
+    font-size: 14px;
+    padding: 2px 5px;
+    color: white;
+    background: #FF1268;
+}
+
+.scrollBox{
+    width: 100px;
+    height: 100px;
+    background: #ff1268;
+    position: fixed;
+    top: 70%;
+    right: 30px;
+    color: white;
+    display: none;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+}
+.scrollBox p:nth-of-type(1){
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 30px;
+}
+
+
