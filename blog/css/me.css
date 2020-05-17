@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: 'STZhongsong';
+}
+
+.banner {
+    position: relative;
+    background-image: url(../img/banner-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    min-height: 320px;
+    padding: 0 !important;
+    z-index: 1;
+}
+
+.header_con {
+    background-color: #fff;
+}
+
+.navbar-collapse {
+    padding: 0;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    background-color: rgba(1, 1, 1, .5);
+    padding: 0;
+    margin: 0;
+}
+
+.nav-ul>li {
+    padding: 10px;
+}
+
+.nav-ul>li>a {
+    color: #fff !important;
+    font-size: 13px;
+}
+
+.nav-ul>li:hover {
+    background-color: rgba(1, 1, 1, .5);
+}
+
+.nav-ol>li>a {
+    color: #fff !important;
+    font-size: 16px;
+}
+
+.nav-ol>li:hover a {
+    text-decoration: underline;
+}
+
+header {
+    background-image: url(../img/bg.png);
+    height: 100%;
+    overflow: hidden;
+}
+
+.header-top {
+    margin-top: 20px;
+}
+
+.media {
+    cursor: pointer;
+    background-color: #fff;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .15) !important;
+}
+
+.media:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .25) !important;
+}
+
+.media-img {
+    overflow: hidden;
+    padding: 0;
+}
+
+.media-img>img {
+    width: 100%;
+    height: 100%;
+    transition: all 1s;
+}
+
+.media:hover img {
+    transform: scale(1.2);
+}
+
+
+.media {
+    padding: 10px;
+}
+
+.media>img {
+    width: 200px;
+}
+
+
+/* Snow */
+#Snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    background: rgba(225, 225, 225, 0.1);
+    pointer-events: none;
+}
