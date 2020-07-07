@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content=never><title>购物车页面</title><link rel=stylesheet href=../css/iconfont.css><link rel=stylesheet href=../css/base.css><link rel=stylesheet href=../css/layout.css></head><body><div class="overall_content container-fluid"><div class="header_content container"><div class="header_content_one l"><a href=../index.html>小米商城</a><span>|</span> <a href=JavaScript:;>MlUl</a><span>|</span> <a href=JavaScript:;>loT</a><span>|</span> <a href=JavaScript:;>云服务</a><span>|</span> <a href=JavaScript:;>金融</a><span>|</span> <a href=JavaScript:;>有品</a><span>|</span> <a href=JavaScript:;>小爱开放平台</a><span>|</span> <a href=JavaScript:;>企业团购</a><span>|</span> <a href=JavaScript:;>资质证明</a><span>|</span> <a href=JavaScript:;>协议规则</a><span>|</span> <a href=JavaScript:;>下载app</a><span>|</span> <a href=JavaScript:;>Select Location</a></div><div class="header_content_two r"><div class="header_tow_left l"><i class=btnI><a href=JavaScript:;>退出登录</a></i><span>|</span> <a href=JavaScript:; name=login>登录</a><span>|</span> <a href=../message/register.html>注册</a><span>|</span> <a href=JavaScript:;>消息通知</a></div><div class="header_tow_right r"><a href=JavaScript:; name=buCay><span class="iconfont icon-gouwuchekong"></span>购物车</a></div><div class=header_content_sidebar><div><p>我是购物车</p></div></div></div></div></div><div class="header_nav container"><div class=header_nav_one><div class=header_nav_one_box><span class="iconfont icon-shouye"></span> <span class="iconfont icon-xiaomi2"></span></div></div><div class="header_nav_tow clear"><ul><li><a href=JavaScript:;>小米手机</a></li><li><a href=JavaScript:;>Redmi红米</a></li><li><a href=JavaScript:;>电视</a></li><li><a href=JavaScript:;>笔记本</a></li><li><a href=JavaScript:;>家电</a></li><li><a href=JavaScript:;>路由器</a></li><li><a href=JavaScript:;>智能硬件</a></li><li><a href=JavaScript:;>服务</a></li><li><a href=JavaScript:;>社区</a></li></ul></div><div class=header_nav_the><div class=header_nav_the_input><input type=text></div><div class=header_nav_the_span><span class="iconfont icon-sousuo"></span></div><div class=header_nav_the_i><i>小米10</i> <i>Redmi K30 Pro</i></div></div></div><div class=cmList><h1>我是购物车</h1><div class=classListShop></div></div><script src=../lib/jquery.min.js></script><script src=../js/index.js></script><script src=../js/cookie.js></script><script>// 1 - 获取 localStorage中的数据信息  cart前面页面传过来的键名  给购物车添加数据
+        const cateArr = JSON.parse(localStorage.getItem('cart'));
+        setPage(cateArr)
+        function setPage(array) {
+            $('.classListShop').html('');
+            // if (!array.length) return
+
+            // 定义变量来存储数据,定义在函数中
+            let NUM = 0;
+            let TYPE = 0;
+            let PAY = 0;
+
+            // 2 - 根据数据内容生成的页面
+            let str = `
+        <p>商品详情页面</p>
+        <div class="checkbox">
+            <label for="">
+                <input name="all" type="checkbox" value="">
+                全选
+            </label>
+            <label for="">
+                <input name="on" type="checkbox" value="">
+                不选
+            </label>
+            <label for="">
+                <input name="not" type="checkbox" value="">
+                反选
+            </label>
+        </div>
+    `;
+            // 生成购物车数量
+            array.forEach(function (item, key) {
+                let shop = `
+        <a href="JavaScript:;" name="buCay">
+                <span class="iconfont icon-gouwuchekong"></span>购物车
+                <i>(${key + 1})</i>
+        </a>
+        `;
+                $('.header_tow_right').html(shop);
+            })
+            // 生成商品信息部分
+            array.forEach(function (item) {
+                str += `
+    <div class="cmListShop">
+        <div class="cmListShop_ck">
+            <label for="">
+                <input name="checked" goods_id="${item.goods_id}" type="checkbox" ${item.buy === true ? 'checked' : ''}>
+            </label>
+        </div>
+        <div class="cmListShopImg">
+            <img src="${item.goods_small_logo}" alt="">
+        </div>
+        <div class="cmListShop_p">
+            <p>${item.goods_name}</p>
+            <i>￥${item.goods_price}</i>
+            <div class="cmListShop_p_a">
+                <a href="javascript:;" name="del" goods_id="${item.goods_id}" class="btn_x" role="button">删除商品</a>
+                <a href="javascript:;" name="lost" goods_id="${item.goods_id}"  class="btn_x" role="button" ${item.num == 1 ? 'disabled' : ''}>-</a>
+                <a href="javascript:;" class="btn_x" role="button">${item.num}</a>
+                <a href="javascript:;" name="odd" goods_id="${item.goods_id}" class="btn_x" role="button"${item.num == item.goods_number ? 'disabled' : ''}>+</a>
+            </div>
+        </div>
+    </div>
+`;
+                $('.classListShop').html(str);
+            })
+        }
+        // 通过事件委托给动态生成的内容添加事件b
+        const oDiv = document.querySelector('.classListShop');
+        oDiv.addEventListener('click', function (e) {
+            if (e.target.getAttribute('name') === 'all') {
+                // 给数组中的所有数据，给buy都设定为true
+                cateArr.forEach(function (item) {
+                    item.buy = true;
+                });
+            }
+            // 点击的是不选标签
+            if (e.target.getAttribute('name') === 'on') {
+                // 给数组中的所有数据,buy属性都设定为false
+                cateArr.forEach(function (item) {
+                    item.buy = false;
+                })
+            }
+
+            // 点击的是反选标签
+            if (e.target.getAttribute('name') === 'not') {
+                // 给数组中的所有数据,buy属性都设定为原始数值取反
+                cateArr.forEach(function (item) {
+                    item.buy = !(item.buy);
+                })
+            }
+
+            if (e.target.getAttribute('name') === 'checked') {
+                // 获取 goods_id 的属性
+                let goods_id = e.target.getAttribute('goods_id');
+                cateArr.forEach(function (item) {
+                    // 如果当前item的goods_id 与 标签中存储的goods_id相同
+                    if (item.goods_id === goods_id) {
+                        // 设定 数据 的 购买数据,是复选框当前的数据
+                        item.buy = $(e.target).prop('checked');
+                    }
+                })
+
+            }
+            // 删除按钮
+            if (e.target.getAttribute('name') === 'del') {
+                // 获取 goods_id 的属性
+                let goods_id = e.target.getAttribute('goods_id');
+                cateArr.forEach(function (item, key) {
+                    // 如果当前item的goods_id 与 标签中存储的goods_id相同
+                    if (item.goods_id === goods_id) {
+                        // 从当前的索引下标开始,删除数组中的一个数据单元
+                        cateArr.splice(key, 1);
+                    }
+                })
+
+            }
+
+            // 添加 按钮
+            if (e.target.getAttribute('name') === 'odd') {
+                // 获取 goods_id 的属性
+                let goods_id = e.target.getAttribute('goods_id');
+                cateArr.forEach(function (item, key) {
+                    // 如果当前item的goods_id 与 标签中存储的goods_id相同
+                    if (item.goods_id === goods_id) {
+                        // 购买数量++
+                        item.num++;
+                    }
+                })
+            }
+
+            // 减少 按钮
+            if (e.target.getAttribute('name') === 'lost') {
+                // 获取 goods_id 的属性
+                let goods_id = e.target.getAttribute('goods_id');
+                cateArr.forEach(function (item, key) {
+                    // 如果当前item的goods_id 与 标签中存储的goods_id相同
+                    if (item.goods_id === goods_id) {
+                        // 购买数量--
+                        item.num--;
+                    }
+                })
+            }
+
+            // 将新的数组,写入到页面中
+            setPage(cateArr);
+            //把数组数据写入到localstorage里面
+            localStorage.setItem('cart', JSON.stringify(cateArr));
+        })</script></body></html>

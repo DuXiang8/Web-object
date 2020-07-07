@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>登录</title><link rel=stylesheet href=../css/layout.css><style>*{margin:0;padding:0;user-select:none}body{width:100%;height:100%;background:url(../img/loginbg.jpg) no-repeat;background-size:cover}.div_login{width:400px;background-color:rgba(0,0,0,.6);position:absolute;left:50%;top:50%;padding:50px;transform:translate(-50%,-50%);box-sizing:border-box;box-shadow:0 15px 25px rgba(1,1,1,.5);border-radius:10px}.div_login h2{font-family:Cambria,Cochin,Georgia,Times,'Times New Roman',serif;font-size:40px;margin:0 0 40px;padding:0;color:#fff;letter-spacing:5px;text-align:center;text-shadow:0 5px 5px #10aec2}.div_login .inputBox,.yz{position:relative}.div_login .inputBox input{width:100%;padding:20px 0;font-size:16px;color:#fff;letter-spacing:5px;margin-bottom:30px;border:none;border-bottom:1px solid #fff;outline:0;background:0 0}.div_login .inputBox label{position:absolute;top:10px;left:0;padding:10px 0;font-size:16px;color:#fff;pointer-events:none;transition:.5s}.div_login .yz input{width:120px;padding:20px 0;font-size:16px;color:#fff;letter-spacing:5px;max-zoom:6;margin-bottom:30px;border:none;border-bottom:1px solid #fff;outline:0;background:0 0}.div_login .yz label{position:absolute;top:10px;left:0;padding:10px 0;font-size:16px;color:#fff;pointer-events:none;transition:.5s}.div_login .yz input:focus~label,.div_login .yz input:valid~label{top:-20px;left:0;color:#03a9f4;font-size:12px}.div_login .yz input:focus input{color:#fff}.div_login .inputBox input:focus~label,.div_login .inputBox input:valid~label{top:-20px;left:0;color:#03a9f4;font-size:12px}.div_login .inputBox input:focus{border-bottom:1px solid #03a9f4}.div_login .yz span{font-family:'仿宋';font-size:18px;background-color:rgba(16,174,194,.4);color:#fff;padding:10px 10px;letter-spacing:5px;float:right;margin-top:25px;cursor:pointer}.div_login input[type=submit]{background:0 0;border:none;outline:0;color:#fff;background-color:#03a9f4;padding:10px 30px;cursor:pointer;border-radius:7px;margin-left:35%;margin-top:10%;font-size:16px}.div_login input[type=submit]:hover{background:#10aec2;color:#000}</style></head><body><div class=div_login><h2>Login</h2><div class=inputBox><input type=text name=userName required maxlength=9> <label>Username</label></div><div class=inputBox><input type=password name=userPass required maxlength=9> <label>Password</label></div><div class=yz><input type=text name=vc required maxlength=9> <label name=label>Security</label> <span name=vcName></span></div><input type=submit name=login value=登录></div><script src=../lib/jquery.min.js></script><script src=../js/cookie.js></script><script>$('[name="login"]').on('click', function () {
+            let username = $('[name="userName"]').val();
+            let userPass = $('[name="userPass"]').val();
+            // ajax请求
+            $.ajax({
+                url: '../server/goods_login.php',
+                type: 'post',
+                data: { userName: username, userPwd: userPass },
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res === 1) {
+                        window.alert('登入,点击确定跳转或页面');
+                        //跳转回首页面登录成功后 携带参数到首页
+                        // 哪来回哪去
+                        // 判断是否是首页面 1 首页面需要传参 登录信息 2 获取url地址参数
+                        let str = decodeURIComponent(window.location.search);
+                        str = str.substr(1);
+
+                        // 判断数据中是否有'index.html'这个信息
+                        // if(str.indexOf('index.html') === -1){
+                        //     window.location.href = str;
+                        // }else{
+                        //     // 是首页要拼接参数
+                        //     window.location.href = str + 'login=登录成功';
+                        // }
+
+                        // 首页面的跳转也不需要拼接参数 login=1,可以直接转换回来的页面
+                        window.location.href = str;
+
+
+                        // 登录成功,设定coolie
+                        // 此时的cookie 是 www文件夹 下的 cookie
+                        // 可以在登录页面上设定一个全局的cookie,任意一个文件都可以获取到cookie
+                        // 就不用在 首页面上设定 cookie
+                        setCookies('login', 1, 7 * 24 * 60 * 60);
+                    } else if (res === 0) {
+                        window.alert('登入失败，点击确定重新登录');
+                        window.location.href = 'http://127.0.0.1/xiaomi/message/login.html';
+                    }
+                }
+            })
+        })
+        let vcStr = 'abcdefghijklmnopqrestuvwxyzABCDEFGHIJKLMNOPQRESTUVWXYZ1234567890';
+        // 验证码
+        function setVc() {
+            let newStr = '';
+            for (let i = 1; i <= 6; i++) {
+                // 定义随机数,生成的是字符串的长度等于下标
+                let num = parseInt(Math.random() * vcStr.length);
+                if (newStr.indexOf(vcStr[num]) === -1) {
+                    newStr += vcStr[num];
+                } else {
+                    //等于 1 就是有相同数据 i-- 在循环一次
+                    i--;
+                }
+            }
+            return newStr;
+        }
+        $('[name="login"]').on('click', function () {
+            // 手集数据
+            let username = $('[name="username"]').val();
+            let userPass = $('[name="userPass"]').val();
+            let vcInput = $('[name="vc"]').val();
+            let vcName = $('[name="vcName"]').html();
+            // 判断
+            if ($('[name="username"]').val() == '') {
+                window.alert('请输入账号');
+            }
+            if ($('[name="userPass"]').val() == '') {
+                window.alert('请输入密码');
+            }
+            if ($('[name="vc"]').val() == '') {
+                window.alert('请输入验证码');
+            }
+            // 如果验证码错误 label 变为红色
+            if (vcName.toLowerCase() !== $('[name="vc"]').val().toLowerCase()) {
+                $('[name="label"]').css({
+                    color: 'rgba(238, 63, 77, .9)',
+                });
+                $('[name="vcName"]').html(setVc());
+                $('[name="vc"]').val('');
+                return false;
+            }
+        })
+        // 写入进去
+        $('[name="vcName"]').html(setVc()).click(function () {
+            $(this).html(setVc());
+        });</script></body></html>
